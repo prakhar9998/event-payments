@@ -12,9 +12,11 @@ class PlayersInfo(models.Model):
         message="Phone number should be of 10 digits.")
     contact_no = models.CharField(validators=[contact_regex], max_length=10)
     payment_status = models.BooleanField(default=False)
-
+    created_date = models.DateTimeField(auto_now_add=True)
+    modified_date = models.DateTimeField(auto_now=True)
+    
     def __str__(self):
-        return self.team_leader_fullname
+        return self.leader_fullname
 
 class Order(models.Model):
     order_id = models.CharField(max_length=50)
@@ -39,4 +41,4 @@ class PaymentHistory(models.Model):
     REFUNDAMT = models.CharField(max_length=10, null=True, blank=True)
 
     def __str__(self):
-        return self.team
+        return self.team.leader_fullname

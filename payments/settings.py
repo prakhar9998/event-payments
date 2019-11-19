@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 """
 
 import os
+from decouple import config
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -20,10 +21,10 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'quyqe0vsxa(bq#yw=x+(l1i@#wmlrzo8jh6ay&w0n0$!9%!_6r'
+SECRET_KEY = config('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = config('DEBUG', cast=bool)
 
 ALLOWED_HOSTS = []
 
@@ -74,12 +75,27 @@ WSGI_APPLICATION = 'payments.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 
+
+# DEBUG DATABASE
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3')
     }
 }
+
+# FOR PRODUCTION
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': os.path.join(BASE_DIR, 'db.mysql'),
+#         'USER': config('DB_USER'),
+#         'PASSWORD': config('DB_PASSWORD'),
+#         'HOST': config('DB_HOST'),
+#         'PORT': config('DB_PORT')
+
+#     }
+# }
 
 
 # Password validation
@@ -119,8 +135,15 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
 STATIC_URL = '/static/'
-PAYTM_MERCHANT_KEY = "#nR%j@LUkBqgIlI%"
-PAYTM_MERCHANT_ID = "QrlbWY45369945644865"
-HOST_URL = "http://localhost:8000"
-PAYTM_CALLBACK_URL = "/paytm/response/"
-PAYTM_WEBSITE = 'WEBSTAGING'
+# PAYTM_MERCHANT_KEY = "#nR%j@LUkBqgIlI%"
+# PAYTM_MERCHANT_ID = "QrlbWY45369945644865"
+# HOST_URL = "http://localhost:8000"
+# PAYTM_CALLBACK_URL = "/paytm/response/"
+# PAYTM_WEBSITE = 'WEBSTAGING'
+
+
+PAYTM_MERCHANT_KEY = config('PAYTM_MERCHANT_KEY')
+PAYTM_MERCHANT_ID = config('PAYTM_MERCHANT_ID')
+HOST_URL = config("HOST_URL")
+PAYTM_CALLBACK_URL = config("PAYTM_CALLBACK_URL")
+PAYTM_WEBSITE = config("PAYTM_WEBSITE")
