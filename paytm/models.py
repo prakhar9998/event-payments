@@ -3,11 +3,11 @@ from django.utils import timezone
 from django.core.validators import RegexValidator
 
 class PlayersInfo(models.Model):
-    team_leader_fullname = models.CharField(max_length=100)
-    leader_username = models.CharField(max_length=100)
-    participant_1 = models.CharField(max_length=100)
-    participant_2 = models.CharField(max_length=100)
-    participant_3 = models.CharField(max_length=100)
+    leader_fullname = models.CharField(max_length=100)
+    member_1 = models.CharField(max_length=100)
+    member_2 = models.CharField(max_length=100)
+    member_3 = models.CharField(max_length=100)
+    member_4 = models.CharField(max_length=100)
     contact_regex = RegexValidator(regex=r'^[1-9]\d{9}$',
         message="Phone number should be of 10 digits.")
     contact_no = models.CharField(validators=[contact_regex], max_length=10)

@@ -46,7 +46,7 @@ def get_details(request):
             print("OREDER ID", order_id)
             print("CUST ID", cust_id)
 
-            amount = 30
+            amount = 120
 
             data_dict = {
                 'MID': MERCHANT_ID,
