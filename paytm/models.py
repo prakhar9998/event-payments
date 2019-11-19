@@ -14,13 +14,16 @@ class PlayersInfo(models.Model):
     payment_status = models.BooleanField(default=False)
     created_date = models.DateTimeField(auto_now_add=True)
     modified_date = models.DateTimeField(auto_now=True)
-    
+
     def __str__(self):
         return self.leader_fullname
 
 class Order(models.Model):
     order_id = models.CharField(max_length=50)
     player = models.ForeignKey(PlayersInfo, related_name='players', on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.player.leader_fullname
 
 class PaymentHistory(models.Model):
     team = models.ForeignKey(PlayersInfo, related_name='team', on_delete=models.CASCADE)
