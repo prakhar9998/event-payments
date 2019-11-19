@@ -1,21 +1,27 @@
 from django.db import models
 from django.utils import timezone
+from django.core.validators import RegexValidator
 
 class PlayersInfo(models.Model):
-    leader = models.CharField(max_length=100)
+    team_leader_fullname = models.CharField(max_length=100)
+    leader_username = models.CharField(max_length=100)
     participant_1 = models.CharField(max_length=100)
     participant_2 = models.CharField(max_length=100)
     participant_3 = models.CharField(max_length=100)
+    contact_regex = RegexValidator(regex=r'^[1-9]\d{9}$',
+        message="Phone number should be of 10 digits.")
+    contact_no = models.CharField(validators=[contact_regex], max_length=10)
+    payment_status = models.BooleanField(default=False)
 
     def __str__(self):
-        return self.leader
+        return self.team_leader_fullname
 
 class Order(models.Model):
     order_id = models.CharField(max_length=50)
     player = models.ForeignKey(PlayersInfo, related_name='players', on_delete=models.CASCADE)
 
 class PaymentHistory(models.Model):
-    players = models.ForeignKey(PlayersInfo, related_name='players', on_delete=models.CASCADE)
+    team = models.ForeignKey(PlayersInfo, related_name='team', on_delete=models.CASCADE)
     ORDERID = models.CharField(max_length=30)
     TXNID = models.CharField(max_length=64)
     BANKTXNID = models.CharField(max_length=100, null=True, blank=True)
@@ -33,4 +39,4 @@ class PaymentHistory(models.Model):
     REFUNDAMT = models.CharField(max_length=10, null=True, blank=True)
 
     def __str__(self):
-        return self.players
+        return self.team

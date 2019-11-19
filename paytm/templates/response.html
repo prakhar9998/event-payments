@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Tech-Trek'19</title>
+    <link rel="shortcut icon" href="http://hackncs.com/favicon.ico" type="image/x-icon">
+    <style>
+        body {
+            background: url(https://gs-post-images.grdp.co/2019/10/artboard-1-img1570818243116-71.png-rs-high-webp.png);
+            background-position: bottom;
+            background-size: cover;
+            height: 100vh;
+            width: 100vw;
+            background-repeat: inherit;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            text-align: center;
+            color: white;
+            overflow: hidden;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    {% if status is True %}
+    <h1 style="color: green";>Payment Successful</h1>
+    {% else %}
+    <h1 style="color: red";>Payment Failed. Please try again.</h1>
+    {% endif %}
+    <h2>Response: {{ msg }}</h2>
+    <h2>Redirecting to dashboard...</h2>
+    <script>
+        setTimeout(() => {
+            window.location.href = 'http://localhost:8000/paytm/detail';
+        }, 3000)
+    </script>
+</body>
+</html>
