@@ -12,8 +12,11 @@
         font-family: myfont;
         src: url('{% static 'fonts/pubg.ttf' %}');
       }
+      html {
+        overflow-x: hidden;
+      }
       body {
-        height: 100vh;
+        min-height: 100vh;
         margin: 0;
         display: flex;
         justify-content: center;
@@ -25,6 +28,7 @@
         background-size: cover;
         background-position: center;
         background-repeat: no-repeat;
+        box-sizing: border-box;
       }
       .form {
         padding: 32px 42px;
@@ -40,7 +44,6 @@
         padding: 5px 10px;
         border-radius: 4px;
         margin: 10px 0;
-        box-sizing: border-box;
         width: 350px !important;
       }
       input[type=submit] {
@@ -63,23 +66,32 @@
       }
       @media screen and (max-width: 1000px) {
         body {
-          overflow-y: scroll;
-          overflow-x: hidden;
+          overflow-x: hidden !important;
+          align-items: stretch;
         }
         input {
-          width: 300px;
+          width: 100% !important;
+          /* width: 300px !important; */
         }
         .form {
-          padding: 25px;
+          width: 100%;
         }
+        .center-al {
+        position: relative;
+        top: 50%;
+        transform: translateY(-50%);
+      }
       }
     </style>
   </head>
   <body>
-    <form action="#" method="post" class="form-group form">
-      {% csrf_token %}
-      {{ form.as_p }}
-      <input type="submit" value="Pay Now" class="btn btn-primary btn-lg">
+    <form action="#" method="post" class="form">
+      <div class="center-al">
+          {% csrf_token %}
+          {{ form.as_p }}
+          <input type="submit" value="Pay Now" class="btn btn-primary btn-lg">
+      </div>
+      
     </form>
   </body>
 </html>
