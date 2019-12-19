@@ -1,24 +1,18 @@
 from django.forms import ModelForm
 from django import forms
-from paytm.models import PlayersInfo
+from paytm.models import PersonInfo
 
-class PlayersInfoForm(ModelForm):
+class PersonInfoForm(ModelForm):
     class Meta:
-        model = PlayersInfo
+        model = PersonInfo
         fields = [
-            'leader_fullname',
+            'full_name',
             'contact_no',
-            'member_1',
-            'member_2',
-            'member_3',
-            'member_4',
+            'amount',
         ]
 
         widgets = {
-            'leader_fullname': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Username'}),
-            'contact_no': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Whatsapp no.'}),
-            'member_1': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'PUBG Username'}),
-            'member_2': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'PUBG Username'}),
-            'member_3': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'PUBG Username'}),
-            'member_4': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'PUBG Username'})
+            'full_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Username'}),
+            'contact_no': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Contact No.'}),
+            'amount': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Amount'}),
         }

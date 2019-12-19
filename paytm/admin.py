@@ -1,19 +1,21 @@
 from django.contrib import admin
-from .models import Order, PlayersInfo, PaymentHistory
+from .models import Order, PersonInfo, PaymentHistory
 
-class PlayersInfoAdmin(admin.ModelAdmin):
+class PersonInfoAdmin(admin.ModelAdmin):
     list_display=(
-        'leader_fullname',
+        'full_name',
         'payment_status',
         'created_date',
-        'modified_date',)
+        'modified_date',
+    )
 
 class PaymentHistoryAdmin(admin.ModelAdmin):
     list_display=(
-        'team',
+        'person',
         'STATUS',
+        'TXNAMOUNT',
     )
 
 admin.site.register(Order)
 admin.site.register(PaymentHistory, PaymentHistoryAdmin)
-admin.site.register(PlayersInfo, PlayersInfoAdmin)
+admin.site.register(PersonInfo, PersonInfoAdmin)

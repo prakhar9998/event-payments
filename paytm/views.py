@@ -7,8 +7,8 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.conf import settings
-from .models import PlayersInfo, Order, PaymentHistory
-from .forms import PlayersInfoForm
+from .models import PersonInfo, Order, PaymentHistory
+from .forms import PersonInfoForm
 from . import Checksum
 
 
@@ -29,10 +29,10 @@ def unique_order_id_generator(Klass):
 def get_details(request):
     
     if request.method == 'POST':
-        form = PlayersInfoForm(request.POST)
+        form = PersonInfoForm(request.POST)
 
         if form.is_valid():
-            player_instance = form.save()
+            person_instance = form.save()
             print("payment")
             
             MERCHANT_KEY = settings.PAYTM_MERCHANT_KEY
@@ -40,13 +40,13 @@ def get_details(request):
             CALLBACK_URL = settings.HOST_URL + settings.PAYTM_CALLBACK_URL
 
             order_id = unique_order_id_generator(PaymentHistory)
-            Order.objects.create(order_id=order_id, player=player_instance)
+            Order.objects.create(order_id=order_id, person=person_instance)
             
-            cust_id = str(player_instance.pk)
+            cust_id = str(person_instance.pk)
             print("OREDER ID", order_id)
             print("CUST ID", cust_id)
 
-            amount = 120
+            amount = person_instance.amount
 
             data_dict = {
                 'MID': MERCHANT_ID,
@@ -65,7 +65,7 @@ def get_details(request):
             return render(request, "payment.html", {'paytmdict': param_dict})
             
     else:
-        form = PlayersInfoForm()
+        form = PersonInfoForm()
 
     return render(request, 'details.html', {'form': form})
 
@@ -80,8 +80,8 @@ def response(request):
         verify = Checksum.verify_checksum(data_dict, MERCHANT_KEY, data_dict['CHECKSUMHASH'])
         if verify:
             oid = request.POST.get('ORDERID')
-            player = Order.objects.get(order_id=oid).player
-            assert isinstance(player, PlayersInfo)
+            person = Order.objects.get(order_id=oid).person
+            assert isinstance(person, PersonInfo)
             
             if data_dict['STATUS'] == 'TXN_SUCCESS':
                 # Re-verify transaction status from paytm server.
@@ -112,15 +112,15 @@ def response(request):
                 verify_res = requests.post(url, data=post_data, headers={"Content-type": "application/json"}).json()
                 print("VERIFY RES", verify_res)
                 if verify_res["RESPCODE"] == "01":
-                    player.payment_status = True
-                    player.save()
-                    PaymentHistory.objects.create(team=player, **verify_res)
+                    person.payment_status = True
+                    person.save()
+                    PaymentHistory.objects.create(person=person, **verify_res)
                     return render(request, "response.html", {'status': True, 'msg': data_dict['RESPMSG']})
                 else:
                     return render(request, "response.html", {'status': False, 'msg': data_dict['RESPMSG']})                
             else:
                 # return HttpResponse("Payment unsuccesful.")
-                PaymentHistory.objects.create(team=player, **data_dict)
+                PaymentHistory.objects.create(person=person, **data_dict)
                 return render(request, "response.html", {'status': False, 'msg': data_dict['RESPMSG']})
         else:
             return HttpResponse("Checksum verification failed")

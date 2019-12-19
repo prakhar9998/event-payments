@@ -2,31 +2,28 @@ from django.db import models
 from django.utils import timezone
 from django.core.validators import RegexValidator
 
-class PlayersInfo(models.Model):
-    leader_fullname = models.CharField(max_length=100)
-    member_1 = models.CharField(max_length=100)
-    member_2 = models.CharField(max_length=100)
-    member_3 = models.CharField(max_length=100)
-    member_4 = models.CharField(max_length=100)
+class PersonInfo(models.Model):
+    full_name = models.CharField(max_length=100)
     contact_regex = RegexValidator(regex=r'^[1-9]\d{9}$',
         message="Phone number should be of 10 digits.")
     contact_no = models.CharField(validators=[contact_regex], max_length=10)
     payment_status = models.BooleanField(default=False)
     created_date = models.DateTimeField(auto_now_add=True)
     modified_date = models.DateTimeField(auto_now=True)
+    amount = models.IntegerField(default=10)
 
     def __str__(self):
-        return self.leader_fullname
+        return self.full_name
 
 class Order(models.Model):
     order_id = models.CharField(max_length=50)
-    player = models.ForeignKey(PlayersInfo, related_name='players', on_delete=models.CASCADE)
+    person = models.ForeignKey(PersonInfo, related_name='persons', on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.player.leader_fullname
+        return self.person.full_name
 
 class PaymentHistory(models.Model):
-    team = models.ForeignKey(PlayersInfo, related_name='team', on_delete=models.CASCADE)
+    person = models.ForeignKey(PersonInfo, related_name='person', on_delete=models.CASCADE)
     ORDERID = models.CharField(max_length=30)
     TXNID = models.CharField(max_length=64)
     BANKTXNID = models.CharField(max_length=100, null=True, blank=True)
@@ -44,4 +41,4 @@ class PaymentHistory(models.Model):
     REFUNDAMT = models.CharField(max_length=10, null=True, blank=True)
 
     def __str__(self):
-        return self.team.leader_fullname
+        return self.person.full_name
